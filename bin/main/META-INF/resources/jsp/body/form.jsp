@@ -1,7 +1,11 @@
+<%@page import="com.consistent.cuervo.permisos.models.Empleado"%>
 <%@page import="com.liferay.portal.kernel.model.User"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+Empleado usuario = (Empleado) request.getAttribute("Empleado");
+%>
 <div class="row justify-content-center">
 	<div class="col-md-5">
 		<form id="permisos" class="mt-50 mb-50">
@@ -76,7 +80,7 @@
 					Gerente o Director de área*
 				</label>
 				<!-- <input type="text" class="form-control form-control-sm"  id="Gerente_Director" list="informacion2"> -->
-			    <select id="Gerente_Director" class="form-control form-control-sm" name="Gerente Director">
+			    <select id="RecursosHumanos" class="form-control form-control-sm" name="Recursos Humanos">
 			    </select>
 			    <small id="emailHelp" class="form-text text-muted">Nombre y firma.</small>
 			</div>
@@ -94,6 +98,7 @@
 <datalist id="informacion2">
 	<%
 List<User> usuarios = (List<User>) request.getAttribute("users");
+System.out.println("Tamaño: "+usuarios.size());
 String strObjJSON = "";
 if(!usuarios.isEmpty()  && usuarios.size() > 0){
 	strObjJSON = "{\"results\":[";
@@ -112,6 +117,8 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 					
 					String fullName = nombre + " " + apellidoPaterno + " " + apellidoMaterno;
 					strObjJSON += "{ \"id\": \""+strNo_Empleado+"\", \"text\": \""+fullName+"\"},";
+					System.out.println("fullname: "+fullName);
+					System.out.println("json: "+strObjJSON);
 				}				                           
 				                         
 %>
@@ -120,6 +127,7 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 		}
 	}
 	strObjJSON += "{\"id\": \"\" , \"text\": \"\",  \"selected\": \"true\"}]}";
+	System.out.println(strObjJSON);
 }else {
 	strObjJSON = "{}";
 }
@@ -129,10 +137,11 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 
 	$(function(){
 		var _ojbUser = '<%=strObjJSON%>';
-		
+		var _usuario = '<%=usuario%>';
 		console.log(_usuario);
 		
 		var _UsersJSON = JSON.parse(_ojbUser);
+		console.log(_UsersJSON);
 		//_UsersJSON.results.splice(-1,1);
 		
 		$('#JefeInmediato').select2({

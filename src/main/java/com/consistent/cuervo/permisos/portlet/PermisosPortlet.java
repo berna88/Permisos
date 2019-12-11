@@ -10,6 +10,8 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.util.PortalUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
@@ -26,6 +28,8 @@ import org.osgi.service.component.annotations.Component;
 	property = {
 		"com.liferay.portlet.display-category=category.sample",
 		"com.liferay.portlet.header-portlet-css=/css/main.css",
+		"com.liferay.portlet.header-portlet-css=/css/jquery-ui.css",
+		"com.liferay.portlet.footer-portlet-javascript=/js/jquery-ui.js",
 		"com.liferay.portlet.instanceable=true",
 		"javax.portlet.display-name=Permisos",
 		"javax.portlet.init-param.template-path=/",
@@ -58,12 +62,17 @@ public class PermisosPortlet extends MVCPortlet {
 			}else {
 				log.info("No logeado");
 				Empleado empleado = new Empleado();
+				List<User> users = new ArrayList<>();
 				renderRequest.setAttribute("Empleado", empleado);
+				renderRequest.setAttribute("users", users);
 			}
+			super.render(renderRequest, renderResponse);
 			
 		} catch (Exception e) {
 			// TODO: handle exception
+			log.error(e.getCause());
+			e.printStackTrace();
 		}
-		super.render(renderRequest, renderResponse);
+		
 	}
 }
