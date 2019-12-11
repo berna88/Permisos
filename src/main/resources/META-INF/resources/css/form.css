@@ -1,0 +1,84 @@
+@charset "UTF-8";
+
+#permisos select, #permisos textarea, #permisos input{
+	border-color: #cab874;
+    background: black;
+    color: white;
+}
+.amarillo{
+	color: #cab874;
+}
+  
+    /* The container */
+.terminosVacaciones {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.terminosVacaciones input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  height: 22px;
+  width: 22px;
+  border: solid 1px #cbb874;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.terminosVacaciones:hover input ~ .checkmark {
+  background-color: black;
+}
+
+/* When the radio button is checked, add a blue background */
+.terminosVacaciones input:checked ~ .checkmark {
+  background-color: #000000;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.terminosVacaciones input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.terminosVacaciones .checkmark:after {
+ 	top: 6px;
+	left: 6px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: #cbb874;
+}
+
+#permisos .select span{
+	margin-bottom: 0px;
+}
+#permisos button{
+    display: block;
+    float: right;
+    width: 50%;
+    background: #cbb874;
+    border: none;
+    color: black;
+}

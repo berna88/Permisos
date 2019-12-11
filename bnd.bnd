@@ -1,0 +1,4 @@
+Bundle-Name: Permisos
+Bundle-SymbolicName: com.consistent.cuervo.permisos
+Bundle-Version: 1.0.0
+Export-Package: com.consistent.cuervo.permisos.constants
