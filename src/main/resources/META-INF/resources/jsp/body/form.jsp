@@ -90,8 +90,11 @@ Empleado usuario = (Empleado) request.getAttribute("Empleado");
 			    </div>
 			</div>
 			<div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+				<%if(usuario.getUser() != null){ %>
 				<button id="Send" class="btn btn-primary">Enviar</button>
-				
+				<% } else{%>
+				<button class="btn btn-primary" disabled="true">Enviar</button>
+				<%} %>
 			</div>
 		    </div>
 		 </div>
