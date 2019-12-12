@@ -8,25 +8,25 @@ Empleado usuario = (Empleado) request.getAttribute("Empleado");
 %>
 <div class="row justify-content-center">
 	<div class="col-md-5">
-		<form id="permisos" class="mt-50 mb-50">
+		<div id="permisos" class="mt-50 mb-50">
 			<div class="form-row">
 		      <div class="col-md-12 mb-3">
 		      	<label>Tipo de permiso:</label>
 		      	<div class="form-check mb-1">
 			      <label class="form-check-label terminosVacaciones" for="radio1">
-			        <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1" checked>Permiso con goce de sueldo
+			        <input type="radio" class="form-check-input" id="radio1" name="optradio" onclick="getPermiso(this.value)" value="Permiso con goce de sueldo">Permiso con goce de sueldo
 			      	<span class="checkmark"></span>
 			      </label>
 			    </div>
 			    <div class="form-check mb-1">
 			      <label class="form-check-label terminosVacaciones" for="radio2">
-			        <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2">Permiso sin goce de sueldo
+			        <input type="radio" class="form-check-input" id="radio2" name="optradio" onclick="getPermiso(this.value)" value="Permiso sin goce de sueldo">Permiso sin goce de sueldo
 			      	<span class="checkmark"></span>
 			      </label>
 			    </div>
 			    <div class="form-check">
 			      <label class="form-check-label terminosVacaciones">
-			        <input type="radio" class="form-check-input" id="radio3" name="optradio" value="option3">Falta injustificada (sin goce)
+			        <input type="radio" class="form-check-input" id="radio3" name="optradio" onclick="getPermiso(this.value)" value="Falta injustificada (sin goce)">Falta injustificada (sin goce)
 			      	<span class="checkmark"></span>
 			      </label>
 			    </div>
@@ -36,7 +36,7 @@ Empleado usuario = (Empleado) request.getAttribute("Empleado");
 					Fecha de inicio*
 				</label>
 				<div class="input-group mb-3 ">
-					<input type="text" class="form-control form-control-sm calendar" style="background: url('<%=request.getContextPath()+"/img/calendar-cuervo.svg"%>') no-repeat scroll 5px 4px;background-size: 18px;background-position: 99%; " placeholder="Fecha de inicio" id="fechaInicio" >
+					<input type="text" class="form-control form-control-sm calendar" style="background: url('<%=request.getContextPath()+"/img/calendar-cuervo.svg"%>') no-repeat scroll 5px 4px;background-size: 17px;background-position: 96%; " placeholder="Fecha de inicio" id="fechaInicio" autocomplete="off">
 				</div>
 			</div>
 			<div class="form-group col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
@@ -44,7 +44,7 @@ Empleado usuario = (Empleado) request.getAttribute("Empleado");
 					Regresa a laborar*
 				</label>
 				<div class="input-group mb-3 ">
-					<input type="text" class="form-control form-control-sm" style="background: url('<%=request.getContextPath()+"/img/calendar-cuervo.svg"%>') no-repeat scroll 5px 4px;background-size: 18px; background-position: 99%;" placeholder="Regresa a laborar" id="fechaRegreso" >
+					<input type="text" class="form-control form-control-sm" style="background: url('<%=request.getContextPath()+"/img/calendar-cuervo.svg"%>') no-repeat scroll 5px 4px;background-size: 17px; background-position: 96%;" placeholder="Regresa a laborar" id="fechaRegreso" autocomplete="off">
 				</div>
 			</div>
 			<div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -55,7 +55,7 @@ Empleado usuario = (Empleado) request.getAttribute("Empleado");
 			</div>
 		      <div class="col-md-12">
 		      	<label for="comment">Comentarios:</label>
-      			<textarea class="form-control mb-3" rows="2" id="comment" name="text"></textarea>
+      			<textarea class="form-control mb-3" rows="10" cols="50" id="comentarios" name="text" style="resize: none;color: #CDB874;height: 120px;"></textarea>
 		      </div>
 		      <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 select">
 				<label for="exampleFormControlSelect2">
@@ -84,11 +84,17 @@ Empleado usuario = (Empleado) request.getAttribute("Empleado");
 			    </select>
 			    <small id="emailHelp" class="form-text text-muted">Nombre y firma.</small>
 			</div>
+			<div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-6">
+			    <div class="form-check">
+					<label id="mensajeError" style="color:red;padding-left: 2rem;"></label>
+			    </div>
+			</div>
 			<div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
 				<button id="Send" class="btn btn-primary">Enviar</button>
+				
 			</div>
 		    </div>
-		 </form>
+		 </div>
 	</div>
 </div>
 <!-- </form> -->
@@ -134,13 +140,19 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 %>
 </datalist>
 <script>
-
+	var myPermiso = "";
+	function getPermiso(tipoPermiso) {
+		myPermiso = tipoPermiso;
+		console.log(myPermiso);
+	}
+	
 	$(function(){
 		var _ojbUser = '<%=strObjJSON%>';
 		var _usuario = '<%=usuario%>';
 		console.log(_usuario);
 		
 		var _UsersJSON = JSON.parse(_ojbUser);
+		var tipValor = getPermiso();
 		console.log(_UsersJSON);
 		//_UsersJSON.results.splice(-1,1);
 		
@@ -266,13 +278,13 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 		$.datepicker.setDefaults($.datepicker.regional['es']);
 				
 		$("#Send").on('click', function(){
+			console.log("Entrando a send");
+			var _tipPermiso = myPermiso;
+			var _comentarios = document.getElementById("comentarios").value;
 			var _fechaInicio = document.getElementById("fechaInicio").value;
 			var _fechaRegreso = document.getElementById("fechaRegreso").value;
 			var _diasSolicitados = document.getElementById("diasSolicitados").value;
-			var _suplente = $("#Suplente");
 			
-			console.log(_suplente);
-			var _suplenteId = $('#Select-Suplente').val();
 			var _JefeInmediato = $('#JefeInmediato').val();
 			var _JefeInmediatoId = $('#JefeInmediato').val();
 			var _Gerente_Director = $('#Gerente_Director').val();
@@ -280,8 +292,9 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 			var _RecursosHumanos = $('#RecursosHumanos').val();
 			var _RecursosHumanosId = $('#RecursosHumanos').val();
 			var error = document.getElementById('mensajeError');
+			console.log("Tipo de permiso"+_tipPermiso);
 			
-			if(_fechaInicio.trim() == '' && _fechaRegreso.trim() == '' && _diasSolicitados.trim() == '' && _suplenteId.trim() == '' && _JefeInmediatoId.trim() == '' && _Gerente_DirectorId.trim() == '' && _RecursosHumanosId.trim() == ''){
+			if(_fechaInicio.trim() == '' && _fechaRegreso.trim() == '' && _diasSolicitados.trim() == '' && _JefeInmediatoId.trim() == '' && _Gerente_DirectorId.trim() == '' && _RecursosHumanosId.trim() == ''){
 				console.log("Esta vacio");
 				error.innerHTML = "*Todos los campos son requeridos";
 				return "";
