@@ -84,9 +84,9 @@ Empleado usuario = (Empleado) request.getAttribute("Empleado");
 			    </select>
 			    <small id="emailHelp" class="form-text text-muted">Nombre y firma.</small>
 			</div>
-			<div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-6">
+			<div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-3">
 			    <div class="form-check">
-					<label id="mensajeError" style="color:red;padding-left: 2rem;"></label>
+					<label id="mensajeError" style="color:red;"></label>
 			    </div>
 			</div>
 			<div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -292,26 +292,20 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 			var _RecursosHumanos = $('#RecursosHumanos').val();
 			var _RecursosHumanosId = $('#RecursosHumanos').val();
 			var error = document.getElementById('mensajeError');
-			console.log("Tipo de permiso"+_tipPermiso);
+			console.log("Solicitados: "+_diasSolicitados);
+			console.log("_fechaInicio: "+_fechaInicio);
+			console.log("_fechaInicio"+_fechaInicio.trim());
 			
-			if(_fechaInicio.trim() == '' && _fechaRegreso.trim() == '' && _diasSolicitados.trim() == '' && _JefeInmediatoId.trim() == '' && _Gerente_DirectorId.trim() == '' && _RecursosHumanosId.trim() == ''){
+			if(_fechaInicio.trim() === "" || _fechaRegreso.trim() === "" || typeof _tipPermiso === 'undefined' || _diasSolicitados.trim() === "" || _JefeInmediatoId.trim() === "" || _Gerente_DirectorId.trim() === "" || _RecursosHumanosId.trim() === ""){
 				console.log("Esta vacio");
 				error.innerHTML = "*Todos los campos son requeridos";
 				return "";
 			}
 			
-			var _CheckPoliticas = document.getElementById("CheckPoliticas").checked;
-			if(_CheckPoliticas != true){
-				error.innerHTML = "*Debes aceptar los terminos y condiciones";
-				return "";
-			}
-			var _periodo = "";
-			
-			console.log(_fechaInicio, ' ', _fechaRegreso, ' ', _diasSolicitados, ' ', _suplenteId, ' '
-					, _JefeInmediato, ' ', _Gerente_Director, ' ', _RecursosHumanos, ' ', _CheckPoliticas, ' ', _periodo  );
+			console.log(_fechaInicio, ' ', _fechaRegreso, ' ', _diasSolicitados, ' ',  _JefeInmediato, ' ', _Gerente_Director, ' ', _RecursosHumanos, ' ', _tipPermiso, ' ', _comentarios  );
 			
 			var _SolicitudJSON = "{\"Inicio\":\""+_fechaInicio+"\",\"Diasatomar\": \""+_diasSolicitados+"\",\"Gerente\":\""
-				+_Gerente_DirectorId+"\",\"Nomina\":\""+_suplenteId+"\",\"Jefe\":\""+_JefeInmediatoId+"\",\"Periodo\":\""+_periodo+"\",\"Final\":\""
+				+_Gerente_DirectorId+"\",\"TipoPermiso\":\""+_tipPermiso+"\",\"Jefe\":\""+_JefeInmediatoId+"\",\"Comentarios\":\""+_comentarios+"\",\"Final\":\""
 				+_fechaRegreso+"\", \"Rhvobo\":\""+_RecursosHumanosId+"\"}";
 				
 			console.log(_SolicitudJSON);	
@@ -326,7 +320,7 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 			//window.location.href = origin + pathname;
 			
 			$.ajax({
-				url: '${addRequestVacationURL}',
+				url: '${addRequestPermisosURL}',
 			    type: 'POST',
 			    datatype:'json',
 			    cache:false,
@@ -334,9 +328,9 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 			    	<portlet:namespace/>Inicio : _fechaInicio,
 			    	<portlet:namespace/>Diasatomar : _diasSolicitados,
 			    	<portlet:namespace/>Gerente : _Gerente_DirectorId,
-			    	<portlet:namespace/>Nomina : _suplenteId,
+			    	<portlet:namespace/>TipoPermiso : _tipPermiso,
 			    	<portlet:namespace/>Jefe : _JefeInmediatoId,
-			    	<portlet:namespace/>Periodo : _periodo,
+			    	<portlet:namespace/>Comentarios : _comentarios,
 			    	<portlet:namespace/>Final : _fechaRegreso,
 			    	<portlet:namespace/>Rhvobo : _RecursosHumanosId
 			    },

@@ -7,6 +7,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 
 import java.io.IOException;
@@ -17,6 +18,8 @@ import javax.portlet.Portlet;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -73,6 +76,19 @@ public class PermisosPortlet extends MVCPortlet {
 			log.error(e.getCause());
 			e.printStackTrace();
 		}
-		
 	}
+	
+	@Override
+	public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse)
+			throws IOException, PortletException {
+		// TODO Auto-generated method stub
+		log.info("<------ Resource ------->");
+		String nameParam = ParamUtil.getString(resourceRequest, "mvcPath");
+		log.info("nameParam " + nameParam);
+		if(nameParam != null && nameParam.equalsIgnoreCase("addRequestPermisos")) {
+			
+		}
+		super.serveResource(resourceRequest, resourceResponse);
+	}
+	
 }

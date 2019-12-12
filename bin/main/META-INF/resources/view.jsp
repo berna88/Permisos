@@ -4,6 +4,9 @@
 <link rel="stylesheet" type="text/css" href='<%=request.getContextPath()+"/css/general.css"%>'>
 <link rel="stylesheet" type="text/css" href='<%=request.getContextPath()+"/css/form.css"%>'>
 
+<portlet:resourceURL var="addRequestPermisosURL">
+	<portlet:param name="mvcPath" value="addRequestPermisos"/>
+</portlet:resourceURL>
 
 <%@ include file="jsp/header/banner.jsp" %>
 
