@@ -86,6 +86,15 @@ public class PermisosPortlet extends MVCPortlet {
 		String nameParam = ParamUtil.getString(resourceRequest, "mvcPath");
 		log.info("nameParam " + nameParam);
 		if(nameParam != null && nameParam.equalsIgnoreCase("addRequestPermisos")) {
+			String strInicio = ParamUtil.getString(resourceRequest, "Inicio");
+			String strDiasTomar = ParamUtil.getString(resourceRequest, "Diasatomar");
+			String strGerente = ParamUtil.getString(resourceRequest, "Gerente");
+			String strTipoPermiso = ParamUtil.getString(resourceRequest, "TipoPermiso");
+			String strJefe = ParamUtil.getString(resourceRequest, "Jefe");
+			String strComentarios = ParamUtil.getString(resourceRequest, "Comentarios");
+			String strRhVoBo = ParamUtil.getString(resourceRequest, "Rhvobo");
+			
+			log.info("Empleado"+empleado.getNoEmpleado());
 			
 		}
 		super.serveResource(resourceRequest, resourceResponse);
