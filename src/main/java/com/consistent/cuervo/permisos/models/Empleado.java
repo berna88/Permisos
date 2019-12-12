@@ -30,6 +30,10 @@ public class Empleado {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	public String getEmail() {
+		return this.user.getEmailAddress();
+	}
+	
 	public String getNoEmpleado() {
 		try {
 			noEmpleado = (String) user.getExpandoBridge().getAttribute("No_Empleado");

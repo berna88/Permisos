@@ -1,6 +1,7 @@
 package com.consistent.cuervo.permisos.portlet;
 
 import com.consistent.cuervo.permisos.constants.PermisosPortletKeys;
+import com.consistent.cuervo.permisos.email.SendMail;
 import com.consistent.cuervo.permisos.models.Empleado;
 import com.consistent.cuervo.permisos.portal.Portal;
 import com.liferay.portal.kernel.log.Log;
@@ -85,19 +86,28 @@ public class PermisosPortlet extends MVCPortlet {
 		log.info("<------ Resource ------->");
 		String nameParam = ParamUtil.getString(resourceRequest, "mvcPath");
 		log.info("nameParam " + nameParam);
-		if(nameParam != null && nameParam.equalsIgnoreCase("addRequestPermisos")) {
-			String strInicio = ParamUtil.getString(resourceRequest, "Inicio");
-			String strDiasTomar = ParamUtil.getString(resourceRequest, "Diasatomar");
-			String strGerente = ParamUtil.getString(resourceRequest, "Gerente");
-			String strTipoPermiso = ParamUtil.getString(resourceRequest, "TipoPermiso");
-			String strJefe = ParamUtil.getString(resourceRequest, "Jefe");
-			String strComentarios = ParamUtil.getString(resourceRequest, "Comentarios");
-			String strRhVoBo = ParamUtil.getString(resourceRequest, "Rhvobo");
-			
-			log.info("Empleado"+empleado.getNoEmpleado());
-			
+		try {
+			if(nameParam != null && nameParam.equalsIgnoreCase("addRequestPermisos")) {
+				String strInicio = ParamUtil.getString(resourceRequest, "Inicio");
+				String strDiasTomar = ParamUtil.getString(resourceRequest, "Diasatomar");
+				String strGerente = ParamUtil.getString(resourceRequest, "Gerente");
+				String strTipoPermiso = ParamUtil.getString(resourceRequest, "TipoPermiso");
+				String strJefe = ParamUtil.getString(resourceRequest, "Jefe");
+				String strComentarios = ParamUtil.getString(resourceRequest, "Comentarios");
+				String strRhVoBo = ParamUtil.getString(resourceRequest, "Rhvobo");
+				
+				log.info("Email: "+empleado.getEmail());
+				SendMail.mail(empleado.getEmail(), "tienda@cuervo.com", "permisos", null);
+				log.info("Correo enviado");
+			}
+			super.serveResource(resourceRequest, resourceResponse);
+		}catch (Exception e) {
+			// TODO: handle exception
+			log.error("serveResource");
+			log.error(e.getCause());
+			e.printStackTrace();
 		}
-		super.serveResource(resourceRequest, resourceResponse);
+		
 	}
 	
 }
