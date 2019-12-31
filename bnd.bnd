@@ -2,3 +2,39 @@ Bundle-Name: Permisos
 Bundle-SymbolicName: com.consistent.cuervo.permisos
 Bundle-Version: 1.0.0
 Export-Package: com.consistent.cuervo.permisos.constants
+Web-ContextPath: /Permisos-portlet
+Import-Package:*;resolution:=optional
+Bundle-ClassPath:\
+  .,\
+lib/barcodes.jar,\
+lib/slf4j-api.jar,\
+lib/font-asian.jar,\
+lib/forms.jar,\
+lib/hyph.jar,\
+lib/io.jar,\
+lib/kernel.jar,\
+lib/layout.jar,\
+lib/pdfa.jar,\
+lib/sign.jar,\
+lib/styled-xml-parser.jar,\
+lib/svg.jar,\
+lib/slf4j-api.jar,\
+lib/slf4j-log4j12.jar,\
+lib/commons-io.jar
+  
+ -includeresource:\
+lib/barcodes.jar=barcodes-7.1.4.jar,\
+lib/slf4j-api.jar=slf4j-api-1.7.13.jar,\
+lib/font-asian.jar=font-asian-7.1.4.jar,\
+lib/forms.jar=forms-7.1.4.jar,\
+lib/hyph.jar=hyph-7.1.4.jar,\
+lib/io.jar=io-7.1.4.jar,\
+lib/kernel.jar=kernel-7.1.4.jar,\
+lib/layout.jar=layout-7.1.4.jar,\
+lib/pdfa.jar=pdfa-7.1.4.jar,\
+lib/sign.jar=sign-7.1.4.jar,\
+lib/styled-xml-parser.jar=styled-xml-parser-7.1.4.jar,\
+lib/svg.jar=svg-7.1.4.jar,\
+lib/slf4j-api.jar=slf4j-api-1.7.13.jar,\
+lib/slf4j-log4j12.jar=slf4j-log4j12-1.7.13.jar,\
+lib/commons-io.jar=commons-io-2.6.jar

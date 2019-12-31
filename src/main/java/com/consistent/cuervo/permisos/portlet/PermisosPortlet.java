@@ -1,17 +1,23 @@
 package com.consistent.cuervo.permisos.portlet;
 
 import com.consistent.cuervo.permisos.constants.PermisosPortletKeys;
-import com.consistent.cuervo.permisos.email.SendMail;
 import com.consistent.cuervo.permisos.models.Empleado;
 import com.consistent.cuervo.permisos.portal.Portal;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,20 +28,23 @@ import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.osgi.service.component.annotations.Component;
 
-/**
- * @author bernardohernandez
- */
 @Component(
 	immediate = true,
 	property = {
-		"com.liferay.portlet.display-category=category.sample",
-		"com.liferay.portlet.header-portlet-css=/css/main.css",
-		"com.liferay.portlet.header-portlet-css=/css/jquery-ui.css",
-		"com.liferay.portlet.footer-portlet-javascript=/js/jquery-ui.js",
+		"com.liferay.portlet.display-category=Cuervo",
 		"com.liferay.portlet.instanceable=true",
 		"javax.portlet.display-name=Permisos",
+		//"com.liferay.portlet.footer-portlet-javascript=/js/jquery-ui.js",
+		//"com.liferay.portlet.footer-portlet-javascript=/js/select2.min.js",
+		//"com.liferay.portlet.footer-portlet-javascript=/js/i18n/es.js",
+		"com.liferay.portlet.header-portlet-css=/css/jquery-ui.css",
+		"com.liferay.portlet.header-portlet-css=/css/main.css",
+		"com.liferay.portlet.header-portlet-css=/css/banner.css",
+		"com.liferay.portlet.header-portlet-css=/css/form.css",
+		"com.liferay.portlet.header-portlet-css=/css/general.css",
 		"javax.portlet.init-param.template-path=/",
 		"javax.portlet.init-param.view-template=/view.jsp",
 		"javax.portlet.name=" + PermisosPortletKeys.PERMISOS,
@@ -50,8 +59,7 @@ public class PermisosPortlet extends MVCPortlet {
 	private Empleado empleado;
 	
 	@Override
-	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
-			throws IOException, PortletException {
+	public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws IOException, PortletException {
 		// TODO Auto-generated method stub
 		log.info("Render");
 		try {
@@ -80,15 +88,15 @@ public class PermisosPortlet extends MVCPortlet {
 	}
 	
 	@Override
-	public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse)
-			throws IOException, PortletException {
+	public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException, PortletException {
 		// TODO Auto-generated method stub
 		log.info("<------ Resource ------->");
 		String nameParam = ParamUtil.getString(resourceRequest, "mvcPath");
 		log.info("nameParam " + nameParam);
 		try {
-			if(nameParam != null && nameParam.equalsIgnoreCase("addRequestPermisos")) {
+			if(nameParam != null && nameParam.equalsIgnoreCase("addRequestPermissions")) {
 				String strInicio = ParamUtil.getString(resourceRequest, "Inicio");
+				String strRegreso = ParamUtil.getString(resourceRequest, "Final");
 				String strDiasTomar = ParamUtil.getString(resourceRequest, "Diasatomar");
 				String strGerente = ParamUtil.getString(resourceRequest, "Gerente");
 				String strTipoPermiso = ParamUtil.getString(resourceRequest, "TipoPermiso");
@@ -96,18 +104,57 @@ public class PermisosPortlet extends MVCPortlet {
 				String strComentarios = ParamUtil.getString(resourceRequest, "Comentarios");
 				String strRhVoBo = ParamUtil.getString(resourceRequest, "Rhvobo");
 				
-				log.info("Email: "+empleado.getEmail());
+				/*log.info("Email: "+empleado.getEmail());
 				SendMail.mail(empleado.getEmail(), "tienda@cuervo.com", "permisos", null);
-				log.info("Correo enviado");
+				log.info("Correo enviado");*/
+				ThemeDisplay td  =(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+				User user = td.getUser();
+				log.info("Se manda a generar el pdf ");
+				File objFilePDF = PermisosPDF.generarPDF(strInicio, strRegreso, strDiasTomar, strGerente, strTipoPermiso, strJefe, strComentarios, strRhVoBo, user);
+				
+				if(resourceResponse.getStatus() == 200) {
+					if(objFilePDF != null){
+						resourceResponse.setContentType("application/pdf");
+						resourceResponse.addProperty("Content-disposition", "atachment; filename=Solicitud_Vacaciones.pdf");
+						OutputStream out = null;
+						InputStream in = null;
+						try {
+							out = resourceResponse.getPortletOutputStream();
+							in = new FileInputStream(objFilePDF);
+							IOUtils.copy(in, out);		
+						} catch (final IOException e) {
+							e.printStackTrace();
+						} finally {
+							try {
+								if (Validator.isNotNull(out)) {
+									out.flush();
+									out.close();
+								}
+								if (Validator.isNotNull(in)) {
+									in.close();
+								}
+
+							} catch (final IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+						
+				}
+				
 			}
 			super.serveResource(resourceRequest, resourceResponse);
 		}catch (Exception e) {
-			// TODO: handle exception
 			log.error("serveResource");
 			log.error(e.getCause());
 			e.printStackTrace();
 		}
 		
+	}
+	
+	@Override
+	public void doView(RenderRequest renderRequest, RenderResponse renderResponse) throws IOException, PortletException {
+		super.doView(renderRequest, renderResponse);
 	}
 	
 }

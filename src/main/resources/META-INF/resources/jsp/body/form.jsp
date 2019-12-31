@@ -1,17 +1,46 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="com.consistent.cuervo.permisos.models.Empleado"%>
 <%@page import="com.liferay.portal.kernel.model.User"%>
 <%@page import="java.util.List"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
 <%
 Empleado usuario = (Empleado) request.getAttribute("Empleado");
+
+List<User> usuarios = (List<User>) request.getAttribute("users");
+String strObjJSON = "";
+if(!usuarios.isEmpty()  && usuarios.size() > 0){
+	strObjJSON = "{\"results\":[";
+	for(User userLiferay: usuarios){
+		if(!userLiferay.isDefaultUser()){
+			if(userLiferay.isActive() && userLiferay.getExpandoBridge().hasAttribute("No_Empleado")){	
+				String strNo_Empleado = (String)userLiferay.getExpandoBridge().getAttribute("No_Empleado");
+				if( strNo_Empleado != null && !strNo_Empleado.equalsIgnoreCase("")){
+					String nombre = userLiferay.getFirstName();
+					String apellidoMaterno = "";
+					String apellidoPaterno = "";
+					if(userLiferay.getExpandoBridge().hasAttribute("Nombres"))
+						nombre = (String)userLiferay.getExpandoBridge().getAttribute("Nombres");
+					if(userLiferay.getExpandoBridge().hasAttribute("Apellido_Materno"))
+						apellidoMaterno = (String)userLiferay.getExpandoBridge().getAttribute("Apellido_Materno");
+					if(userLiferay.getExpandoBridge().hasAttribute("Apellido_Paterno"))
+						apellidoPaterno = (String)userLiferay.getExpandoBridge().getAttribute("Apellido_Paterno");
+					
+					String fullName = nombre + " " + apellidoPaterno + " " + apellidoMaterno;
+					strObjJSON += "{ \"id\": \""+strNo_Empleado+"\", \"text\": \""+fullName+"\"},";
+				}				                           
+			} 
+		}
+	}
+	strObjJSON += "{\"id\": \"\" , \"text\": \"\",  \"selected\": \"true\"}]}";
+}else {
+	strObjJSON = "{}";
+}
 %>
 <div class="row justify-content-center">
 	<div class="col-md-5">
 		<div id="permisos" class="mt-50 mb-50">
 			<div class="form-row">
 		      <div class="col-md-12 mb-3">
-		      	<label>Tipo de permiso:</label>
+		      	<label>Tipo de permiso - Form:</label>
 		      	<div class="form-check mb-1">
 			      <label class="form-check-label terminosVacaciones" for="radio1">
 			        <input type="radio" class="form-check-input" id="radio1" name="optradio" onclick="getPermiso(this.value)" value="Permiso con goce de sueldo">Permiso con goce de sueldo
@@ -100,60 +129,72 @@ Empleado usuario = (Empleado) request.getAttribute("Empleado");
 <!-- </form> -->
 <script src='<%=request.getContextPath()+"/js/select2.min.js"%>'></script>
 <script src='<%=request.getContextPath()+"/js/i18n/es.js"%>'></script>
-
-<datalist id="informacion2">
-	<%
-List<User> usuarios = (List<User>) request.getAttribute("users");
-System.out.println("Tamaño: "+usuarios.size());
-String strObjJSON = "";
-if(!usuarios.isEmpty()  && usuarios.size() > 0){
-	strObjJSON = "{\"results\":[";
-	for(User userLiferay: usuarios){
-		if(!userLiferay.isDefaultUser()){
-			if(userLiferay.isActive() && userLiferay.getExpandoBridge().hasAttribute("No_Empleado")){	
-				String strNo_Empleado = (String)userLiferay.getExpandoBridge().getAttribute("No_Empleado");
-				if( strNo_Empleado != null && !strNo_Empleado.equalsIgnoreCase("")){
-					String nombre = userLiferay.getFirstName();
-					String apellidoMaterno = "";
-					String apellidoPaterno = "";
-					if(userLiferay.getExpandoBridge().hasAttribute("Apellido_Materno"))
-						apellidoMaterno = (String)userLiferay.getExpandoBridge().getAttribute("Apellido_Materno");
-					if(userLiferay.getExpandoBridge().hasAttribute("Apellido_Paterno"))
-						apellidoPaterno = (String)userLiferay.getExpandoBridge().getAttribute("Apellido_Paterno");
-					
-					String fullName = nombre + " " + apellidoPaterno + " " + apellidoMaterno;
-					strObjJSON += "{ \"id\": \""+strNo_Empleado+"\", \"text\": \""+fullName+"\"},";
-					System.out.println("fullname: "+fullName);
-					System.out.println("json: "+strObjJSON);
-				}				                           
-				                         
-%>
-				<option id=<%=strNo_Empleado %> value=<%=userLiferay.getFullName() %> >
-<%			} 
-		}
-	}
-	strObjJSON += "{\"id\": \"\" , \"text\": \"\",  \"selected\": \"true\"}]}";
-	System.out.println(strObjJSON);
-}else {
-	strObjJSON = "{}";
-}
-%>
-</datalist>
+<script src='<%=request.getContextPath()+"/js/jquery-ui.js"%>'></script>
 <script>
 	var myPermiso = "";
 	function getPermiso(tipoPermiso) {
 		myPermiso = tipoPermiso;
-		console.log(myPermiso);
 	}
+	
+	var changeCloseButton = function(input) {
+		setTimeout(function() {
+	        var headerPanel = $( input ).datepicker( "widget" ).find( ".ui-widget-header" );
+	        var closeBtn = $('<button style=\"position:relative; left: 90%;border: none;background: none; color: #CDB874;outline: none;padding: 10px;\">X</button>');
+	        
+	        closeBtn.bind("click", function() {
+	        	$( "#fechaInicio" ).datepicker( "hide" );
+	        	$( "#fechaRegreso" ).datepicker( "hide" );
+	        });
+	        
+	        closeBtn.prependTo(headerPanel);
+	    }, 1 );
+	};
+	
+	$.datepicker.regional.es = {
+			closeText: 'Cerrar',
+			prevText: '< Ant',
+			nextText: 'Sig >',
+			currentText: 'Hoy',
+			monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+			dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+			dayNamesMin: ['D','L','M','M','J','V','S'],
+			weekHeader: 'Sm',
+			dateFormat: 'dd/mm/yy',
+			firstDay: 1,
+			isRTL: false,
+			showMonthAfterYear: false,
+			yearSuffix: ''
+	};
+ 	
+ 	$.datepicker.setDefaults($.datepicker.regional.es);
+	
+	$.extend($.datepicker, {
+		
+	    // Reference the orignal function so we can override it and call it later
+	    _inlineDatepicker2: $.datepicker._inlineDatepicker,
+	
+	    // Override the _inlineDatepicker method
+	    _inlineDatepicker: function (target, inst) {
+	
+	        // Call the original
+	        this._inlineDatepicker2(target, inst);
+	
+	        var beforeShow = $.datepicker._get(inst, 'beforeShow');
+	
+	        if (beforeShow) {
+	            beforeShow.apply(target, [target, inst]);
+	        }
+	    }
+	});
 	
 	$(function(){
 		var _ojbUser = '<%=strObjJSON%>';
 		var _usuario = '<%=usuario%>';
-		console.log(_usuario);
 		
 		var _UsersJSON = JSON.parse(_ojbUser);
 		var tipValor = getPermiso();
-		console.log(_UsersJSON);
 		//_UsersJSON.results.splice(-1,1);
 		
 		$('#JefeInmediato').select2({
@@ -174,109 +215,32 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 			  language: "es"
 		});
 		
-		$.datepicker.regional['es'] = {
-				closeText: 'Cerrar',
-				prevText: '< Ant',
-				nextText: 'Sig >',
-				currentText: 'Hoy',
-				monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-				monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
-				dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-				dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
-				dayNamesMin: ['D','L','M','M','J','V','S'],
-				weekHeader: 'Sm',
-				dateFormat: 'dd/mm/yy',
-				firstDay: 1,
-				isRTL: false,
-				showMonthAfterYear: false,
-				yearSuffix: ''
-		};
-		
-		var inputFecha = $( "#fechaInicio" );
-		var changeCloseButton = function(input) {
-			console.log('fechaInicio');
-			setTimeout(function() {
-				console.log('changeCloseButton ', input);
-		        var headerPanel = inputFecha.datepicker( "widget" ).find( ".ui-datepicker-title" );
-		        var closeBtn = $('<button style=\"position:relative; left: 90%;border: none;background: none; color: #CDB874;outline: none;padding: 10px;\">X</button>');
-		        
-		        closeBtn.bind("click", function() {
-		        	$( "#fechaRegreso" ).datepicker( "hide" );
-		        });
-		        
-		        closeBtn.prependTo(headerPanel);
-		    }, 1000 );
-		};
-		
 		$( "#fechaInicio" ).datepicker({
 			changeMonth: true,
-            changeYear: true,
-            hideIfNoPrevNext: true,
-            minDate: 0,
-            dateFormat: "yy-mm-dd",
+		    changeYear: true,
+		    hideIfNoPrevNext: true,
+		    minDate: 0,
+		    dateFormat: "yy-mm-dd",
 			beforeShow: changeCloseButton,			
 			onChangeMonthYear: changeCloseButton
 		}).focus(function () {
-	        $(".ui-datepicker-next").hide();
-	        $(".ui-datepicker-prev").hide();
-	    });
-		
-		$("#datepicker2").datepicker({
-			 showButtonPanel: true,
-			 beforeShow: function( input ) {
-			 	setTimeout(function() {
-			   		var buttonPane = $( input ).datepicker( "widget" ).find( ".ui-datepicker-buttonpane" );
-
-			   		var btn = $('Clear');
-			   		btn.unbind("click").bind("click", function () { 
-			   			$.datepicker._clearDate( input );
-			  		});
-
-			   		btn.appendTo( buttonPane );
-
-			 }, 1 );
-			      }
-			});
-		
+		    $(".ui-datepicker-next").hide();
+		    $(".ui-datepicker-prev").hide();
+		});
+	
 		$( "#fechaRegreso" ).datepicker({
 			changeMonth: true,
-            changeYear: true,
-            hideIfNoPrevNext: true,
-            minDate: 0,
-            dateFormat: "yy-mm-dd",
-            beforeShow: function( input ) {
-            	console.log('fechaRegreso beforeShow');
-            	setTimeout(function() {
-    		        var headerPanel = $(input).datepicker( "widget" ).find( ".ui-datepicker-title" );
-    		        var closeBtn = $('<button style=\"position:relative; left: 90%;border: none;background: none; color: #CDB874;outline: none;padding: 10px;\">X</button>');
-    		        
-    		        closeBtn.bind("click", function() {
-    		        	$( "#fechaRegreso" ).datepicker( "hide" );
-    		        });
-    		        
-    		        closeBtn.prependTo(headerPanel);
-    		    }, 300 );
-            },
-			onChangeMonthYear: function( input ) {
-				console.log('fechaRegreso onChangeMonthYear');
-				setTimeout(function() {
-			        var headerPanel = $(input).datepicker( "widget" ).find( ".ui-datepicker-title" );
-			        var closeBtn = $('<button style=\"position:relative; left: 90%;border: none;background: none; color: #CDB874;outline: none;padding: 10px;\">X</button>');
-			        
-			        closeBtn.bind("click", function() {
-			        	$( "#fechaRegreso" ).datepicker( "hide" );
-			        });
-			        
-			        closeBtn.prependTo(headerPanel);
-			    }, 200 );
-            },
+		    changeYear: true,
+		    hideIfNoPrevNext: true,
+		    minDate: 0,
+		    dateFormat: "yy-mm-dd",
+		    beforeShow: changeCloseButton,
+			onChangeMonthYear: changeCloseButton
 		}).focus(function () {
-	        $(".ui-datepicker-next").hide();
-	        $(".ui-datepicker-prev").hide();
-	    });		
-		
-		$.datepicker.setDefaults($.datepicker.regional['es']);
-				
+		    $(".ui-datepicker-next").hide();
+		    $(".ui-datepicker-prev").hide();
+		});		
+					
 		$("#Send").on('click', function(){
 			console.log("Entrando a send");
 			var _tipPermiso = myPermiso;
@@ -292,9 +256,6 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 			var _RecursosHumanos = $('#RecursosHumanos').val();
 			var _RecursosHumanosId = $('#RecursosHumanos').val();
 			var error = document.getElementById('mensajeError');
-			console.log("Solicitados: "+_diasSolicitados);
-			console.log("_fechaInicio: "+_fechaInicio);
-			console.log("_fechaInicio"+_fechaInicio.trim());
 			
 			if(_fechaInicio.trim() === "" || _fechaRegreso.trim() === "" || typeof _tipPermiso === 'undefined' || _diasSolicitados.trim() === "" || _JefeInmediatoId.trim() === "" || _Gerente_DirectorId.trim() === "" || _RecursosHumanosId.trim() === ""){
 				console.log("Esta vacio");
@@ -302,20 +263,20 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 				return "";
 			}
 			
-			console.log(_fechaInicio, ' ', _fechaRegreso, ' ', _diasSolicitados, ' ',  _JefeInmediato, ' ', _Gerente_Director, ' ', _RecursosHumanos, ' ', _tipPermiso, ' ', _comentarios  );
+			//console.log(_fechaInicio, ' ', _fechaRegreso, ' ', _diasSolicitados, ' ',  _JefeInmediato, ' ', _Gerente_Director, ' ', _RecursosHumanos, ' ', _tipPermiso, ' ', _comentarios  );
 			
 			var _SolicitudJSON = "{\"Inicio\":\""+_fechaInicio+"\",\"Diasatomar\": \""+_diasSolicitados+"\",\"Gerente\":\""
 				+_Gerente_DirectorId+"\",\"TipoPermiso\":\""+_tipPermiso+"\",\"Jefe\":\""+_JefeInmediatoId+"\",\"Comentarios\":\""+_comentarios+"\",\"Final\":\""
 				+_fechaRegreso+"\", \"Rhvobo\":\""+_RecursosHumanosId+"\"}";
 				
-			console.log(_SolicitudJSON);	
+			//console.log(_SolicitudJSON);	
 			var _objSolicitudJSON = JSON.parse(_SolicitudJSON);
 			
 			var pathname = window.location.pathname; // Returns path only (/path/example.html)
 			var url      = window.location.href;     // Returns full URL (https://example.com/path/example.html)
 			var origin   = window.location.origin;   // Returns base URL (https://example.com)
 			
-			console.log('pathname ' , pathname , ' url ', url , ' origin ', origin);
+			//console.log('pathname ' , pathname , ' url ', url , ' origin ', origin);
 			
 			//window.location.href = origin + pathname;
 			
@@ -334,19 +295,25 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 			    	<portlet:namespace/>Final : _fechaRegreso,
 			    	<portlet:namespace/>Rhvobo : _RecursosHumanosId
 			    },
+			    xhrFields: {
+		            responseType: 'blob'
+		        },
 			    success: function(data){
-			    	console.log("Response "+data);
-			    	window.location.href = origin + pathname;
+			    	var a = document.createElement('a');
+		            var url = window.URL.createObjectURL(data);
+		            a.href = url;
+		            a.download = 'Solicitud_Vacaciones.pdf';
+		            document.body.append(a);
+		            a.click();
+		            a.remove();
+		            window.URL.revokeObjectURL(url);
 			    },
 			    error : function(XMLHttpRequest, textStatus, errorThrown){
 			    	console.log('XMLHttpRequest', XMLHttpRequest);
 			        console.log("errorThrown ", errorThrown);
 			        console.log("textStatus ", textStatus);
 			    }
-			    //beforeSend: setHeader
-			});
-			
-			
+			});			
 				
 		});
 	});
