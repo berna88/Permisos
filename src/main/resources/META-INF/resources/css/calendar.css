@@ -1,0 +1,33 @@
+@charset "UTF-8";
+.gj-picker-bootstrap{
+border: 1px solid #cbb874 !important;
+border-radius: 0px !important;
+padding: 18px !important;
+}
+.gj-picker {
+background-color: #171717 !important;
+}
+.gj-picker table tbody tr{
+color: white !important;
+}
+.gj-picker table thead{
+color: white !important;
+}
+.gj-picker div[role="navigator"]{
+color: #cbb874 !important;
+}
+.gj-datepicker [role=right-icon] {
+   cursor: pointer;
+   display: none !important;
+}
+.gj-picker-bootstrap table tr td.today div {
+   color: #cbb874 !important;
+   font-weight: 700;
+}
+
+.datepicker-dropdown {
+	max-width: 280px;
+	max-height: 300px;
+	width: 100%;
+	background-color: #171717 !important;
+}

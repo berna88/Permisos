@@ -20,7 +20,6 @@
 #permisos select, #permisos textarea, #permisos input{
 	border-color: #cab874;
     background: black;
-    color: white;
 }
 .amarillo{
 	color: #cab874;
@@ -634,14 +633,14 @@
     
     /* Inicio calendar */
     
-    /**** CALENDAR ***/
+    /**** CALENDAR **/
 .ui-datepicker .ui-datepicker-header {
     background: none;
     border: none;
 }
 
 .ui-widget.ui-widget-content {
-    border: 1px solid rgb(205, 184, 116);
+    border: 1px solid rgb(205, 184, 116) !important;
     background: black;
     border-radius: 15px;
 }
@@ -669,8 +668,8 @@
     margin: unset;
 }
 
-.ui-datepicker select.ui-datepicker-month{
-	margin-right: 10px;
+.ui-datepicker-title select.ui-datepicker-month{
+	margin-right: 10px !important;
 }
 
 .ui-datepicker select.ui-datepicker-month,
@@ -694,3 +693,100 @@ table.ui-datepicker-calendar th{
 	color: white;
 }
     /* Fin de calendar */
+    
+    /* MODAL */
+#modal .modal-dialog {
+   
+    z-index: 1!important;
+    outline: none;
+}
+.ui-datepicker table {
+    width: 100%;
+    font-size: .9em;
+    border-collapse: collapse;
+    margin: 0 0 .4em;
+}
+
+h2.titulo-contenido.text-center.mt-25.mb-50 {
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+a#nextBtn {
+    float: right;
+    border: none;
+    background: #CCB874;
+    padding: 5px 29px;
+    text-decoration: none;
+    color: black !important;
+    font-weight: 400;
+    width: 188px;
+    margin-right: 0.1rem;
+    cursor: pointer;
+    text-align: center;
+    height: 34px;
+    line-height: 25px;
+    font-size: 16px;
+    margin-bottom: 2%;
+}
+.select2-container--default .select2-search--inline .select2-search__field {
+     color: white;
+    }
+i.far.fa-check-circle {
+    font-size: 3em;
+    text-align: center;
+    /* position: absolute; */
+    display: block;
+    margin: auto;
+    color: #cbb874;
+}
+#modal .modal-footer .btn-toolbar>.btn:first-child {
+    display: block;
+    margin: auto;
+    background: #CCB874;
+    border-radius: 0;
+    font-family: "Work Sans";
+    font-weight: 600;
+    color: #000 !important;
+    font-size: 18px;
+    line-height: 48px;
+    padding: 0 30px;
+    width: auto;
+}
+#modal .btn-toolbar-content .yui3-widget .component .btn-toolbar{
+    display: block;
+    margin: auto;
+}
+#modal .modal-content {
+    overflow: hidden;
+    background: black;
+    border: solid 1px #cbb874;
+    height: 300px;
+    border-radius: 1.3rem;
+}
+#modal .modal-header {
+ 
+    border: none;
+    margin-top: 5%;
+}
+
+#modal .modal-body {
+    text-align: center;
+    color: white;
+}
+
+#modal .modal-body h3 {
+    font-size: 20px;
+}
+
+#modal .modal-footer {
+    border: none;
+}
+#modal .yui3-widget-ft.modal-footer {
+    display: block;
+    margin: auto;
+}
+
+.show-calendar {
+	display: block !important;
+}

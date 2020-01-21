@@ -19,7 +19,7 @@
 
 <%
 Empleado usuario = (Empleado) request.getAttribute("Empleado");
-
+String portalURL = themeDisplay.getURLPortal();
 List<User> usuarios = (List<User>) request.getAttribute("users");
 String strObjJSON = "";
 if(!usuarios.isEmpty()  && usuarios.size() > 0){

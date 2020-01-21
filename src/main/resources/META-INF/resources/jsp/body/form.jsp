@@ -35,6 +35,10 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 	strObjJSON = "{}";
 }
 %>
+
+<link rel="stylesheet" type="text/css" href='<%=request.getContextPath()+"/css/gijgo.min.css"%>'>
+<link rel="stylesheet" type="text/css" href='<%=request.getContextPath()+"/css/calendar.css"%>'>
+
 <div class="row justify-content-center">
 	<div class="col-md-5">
 		<div id="permisos" class="mt-50 mb-50">
@@ -62,10 +66,10 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 		      </div>
 		      <div class="form-group col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
 				<label for="fechaInicio" >
-					Fecha de inicio*
+					Fecha de inicio***
 				</label>
 				<div class="input-group mb-3 ">
-					<input type="text" class="form-control form-control-sm calendar" style="background: url('<%=request.getContextPath()+"/img/calendar-cuervo.svg"%>') no-repeat scroll 5px 4px;background-size: 17px;background-position: 96%; " placeholder="Fecha de inicio" id="fechaInicio" autocomplete="off">
+					<input type="text" class="form-control form-control-sm calendar" style="background: url('<%=request.getContextPath()+"/img/calendar-cuervo.svg"%>') no-repeat scroll 5px 4px;background-size: 17px;background-position: 96%; " placeholder="Fecha de inicio" id="fechaInicio" autocomplete="off" disabled>
 				</div>
 			</div>
 			<div class="form-group col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
@@ -73,7 +77,7 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 					Regresa a laborar*
 				</label>
 				<div class="input-group mb-3 ">
-					<input type="text" class="form-control form-control-sm" style="background: url('<%=request.getContextPath()+"/img/calendar-cuervo.svg"%>') no-repeat scroll 5px 4px;background-size: 17px; background-position: 96%;" placeholder="Regresa a laborar" id="fechaRegreso" autocomplete="off">
+					<input type="text" class="form-control form-control-sm" style="background: url('<%=request.getContextPath()+"/img/calendar-cuervo.svg"%>') no-repeat scroll 5px 4px;background-size: 17px; background-position: 96%;" placeholder="Regresa a laborar" id="fechaRegreso" autocomplete="off" readonly>
 				</div>
 			</div>
 			<div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -126,10 +130,14 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 		 </div>
 	</div>
 </div>
+<div class="yui3-skin-sam">
+  <div id="modal"></div>
+</div>
 <!-- </form> -->
 <script src='<%=request.getContextPath()+"/js/select2.min.js"%>'></script>
 <script src='<%=request.getContextPath()+"/js/i18n/es.js"%>'></script>
-<script src='<%=request.getContextPath()+"/js/jquery-ui.js"%>'></script>
+<script src='<%=request.getContextPath()+"/js/gijgo.min.js"%>'></script>
+<script src='<%=request.getContextPath()+"/js/datepicker.js"%>'></script>
 <script>
 	var myPermiso = "";
 	function getPermiso(tipoPermiso) {
@@ -242,7 +250,6 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 		});		
 					
 		$("#Send").on('click', function(){
-			console.log("Entrando a send");
 			var _tipPermiso = myPermiso;
 			var _comentarios = document.getElementById("comentarios").value;
 			var _fechaInicio = document.getElementById("fechaInicio").value;
@@ -258,7 +265,7 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 			var error = document.getElementById('mensajeError');
 			
 			if(_fechaInicio.trim() === "" || _fechaRegreso.trim() === "" || typeof _tipPermiso === 'undefined' || _diasSolicitados.trim() === "" || _JefeInmediatoId.trim() === "" || _Gerente_DirectorId.trim() === "" || _RecursosHumanosId.trim() === ""){
-				console.log("Esta vacio");
+	
 				error.innerHTML = "*Todos los campos son requeridos";
 				return "";
 			}
@@ -298,15 +305,28 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 			    xhrFields: {
 		            responseType: 'blob'
 		        },
-			    success: function(data){
-			    	var a = document.createElement('a');
-		            var url = window.URL.createObjectURL(data);
-		            a.href = url;
-		            a.download = 'Solicitud_Vacaciones.pdf';
-		            document.body.append(a);
-		            a.click();
-		            a.remove();
-		            window.URL.revokeObjectURL(url);
+			    success: function(data){		            
+		         	// Internet Explorer 6-11
+			    	var isIE = /*@cc_on!@*/false || !!document.documentMode;
+			    	
+			        if(isIE){
+			        	var binaryData = [];
+				    	binaryData.push(data);
+				    	var url = window.URL.createObjectURL(new Blob(binaryData, {type: "application/zip"}))
+				    	window.navigator.msSaveBlob(new Blob(binaryData, {type: "application/zip"}), "Solicitud_Vacaciones-" + new Date().getTime() + ".pdf");
+			        }
+			        else{
+			        	var binaryData = [];
+				    	binaryData.push(data);
+				    	var url = window.URL.createObjectURL(new Blob(binaryData, {type: "application/zip"}))
+				    	var a = document.createElement('a');
+			            a.href = url;
+			            a.download = "Solicitud_Vacaciones-" + new Date().getTime() +'.pdf';
+			            document.body.append(a);
+			            a.click();
+			            a.remove();
+			            window.URL.revokeObjectURL(url); 
+			        }
 			    },
 			    error : function(XMLHttpRequest, textStatus, errorThrown){
 			    	console.log('XMLHttpRequest', XMLHttpRequest);
@@ -316,5 +336,59 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 			});			
 				
 		});
+		
+		
+		var modal ;
+		var img= '<%=request.getContextPath()+"/img/notificuervo.svg" %>';
+		YUI().use(
+		 'aui-modal',
+		 function(Y) {
+		   modal = new Y.Modal(
+		     {
+		       bodyContent: '<h3>Tu solicitud ha sido enviada con éxito</h3>',
+		       centered: true,
+		       destroyOnHide: false,
+		       headerContent: '<img style =" display: block; margin: auto;"src="'+img+'" alt="" height="42" width="42">',
+		       modal: true,
+		       render: '#modal',
+		       resizable: {
+		         handles: 'b, r'
+		       },
+		       toolbars: {
+		         body: [
+		           
+		         ]
+		       },
+		       visible: false,
+		       width: 650
+		     }
+		   ).render();
+
+		   modal.addToolbar(
+		     [
+		       {
+		         label: 'Aceptar',
+		         on: {
+		           click: function() {
+		            // modal.hide();
+		   var pathname = window.location.pathname; // Returns path only (/path/example.html)
+		var url      = window.location.href;     // Returns full URL (https://example.com/path/example.html)
+		var origin   = window.location.origin;   // Returns base URL (https://example.com)
+		            window.location.href = origin + pathname;
+		           }
+		         }
+		       },
+		     
+		     ]
+		   );
+
+		   Y.one('#btn_env').on(
+		     'click',
+		     function() {
+		     
+		     }
+		   );
+		 }
+		);
 	});
 </script>

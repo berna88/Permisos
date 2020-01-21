@@ -37,14 +37,14 @@ import org.osgi.service.component.annotations.Component;
 		"com.liferay.portlet.display-category=Cuervo",
 		"com.liferay.portlet.instanceable=true",
 		"javax.portlet.display-name=Permisos",
-		//"com.liferay.portlet.footer-portlet-javascript=/js/jquery-ui.js",
-		//"com.liferay.portlet.footer-portlet-javascript=/js/select2.min.js",
-		//"com.liferay.portlet.footer-portlet-javascript=/js/i18n/es.js",
-		"com.liferay.portlet.header-portlet-css=/css/jquery-ui.css",
+		"com.liferay.portlet.header-portlet-css=/css/bootstrap-datepicker.css",
 		"com.liferay.portlet.header-portlet-css=/css/main.css",
 		"com.liferay.portlet.header-portlet-css=/css/banner.css",
 		"com.liferay.portlet.header-portlet-css=/css/form.css",
 		"com.liferay.portlet.header-portlet-css=/css/general.css",
+		"com.liferay.portlet.header-portlet-css=/css/calendar.css",
+		//"com.liferay.portlet.header-portlet-css=/css/jquery-ui.css",
+		//"com.liferay.portlet.footer-portlet-javascript=/js/jquery-ui.js",
 		"javax.portlet.init-param.template-path=/",
 		"javax.portlet.init-param.view-template=/view.jsp",
 		"javax.portlet.name=" + PermisosPortletKeys.PERMISOS,
@@ -89,10 +89,8 @@ public class PermisosPortlet extends MVCPortlet {
 	
 	@Override
 	public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException, PortletException {
-		// TODO Auto-generated method stub
-		log.info("<------ Resource ------->");
+
 		String nameParam = ParamUtil.getString(resourceRequest, "mvcPath");
-		log.info("nameParam " + nameParam);
 		try {
 			if(nameParam != null && nameParam.equalsIgnoreCase("addRequestPermissions")) {
 				String strInicio = ParamUtil.getString(resourceRequest, "Inicio");
@@ -103,19 +101,19 @@ public class PermisosPortlet extends MVCPortlet {
 				String strJefe = ParamUtil.getString(resourceRequest, "Jefe");
 				String strComentarios = ParamUtil.getString(resourceRequest, "Comentarios");
 				String strRhVoBo = ParamUtil.getString(resourceRequest, "Rhvobo");
+				String strPortalURL = ParamUtil.getString(resourceRequest, "portalURL");
 				
 				/*log.info("Email: "+empleado.getEmail());
 				SendMail.mail(empleado.getEmail(), "tienda@cuervo.com", "permisos", null);
 				log.info("Correo enviado");*/
 				ThemeDisplay td  =(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
 				User user = td.getUser();
-				log.info("Se manda a generar el pdf ");
-				File objFilePDF = PermisosPDF.generarPDF(strInicio, strRegreso, strDiasTomar, strGerente, strTipoPermiso, strJefe, strComentarios, strRhVoBo, user);
+				File objFilePDF = PermisosPDF.generarPDF(strInicio, strRegreso, strDiasTomar, strGerente, strTipoPermiso, strJefe, strComentarios, strRhVoBo, user, td, strPortalURL);
 				
 				if(resourceResponse.getStatus() == 200) {
 					if(objFilePDF != null){
 						resourceResponse.setContentType("application/pdf");
-						resourceResponse.addProperty("Content-disposition", "atachment; filename=Solicitud_Vacaciones.pdf");
+						resourceResponse.addProperty("Content-disposition", "atachment; filename=Solicitud_permiso.pdf");
 						OutputStream out = null;
 						InputStream in = null;
 						try {
