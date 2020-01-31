@@ -133,6 +133,9 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 		 </div>
 	</div>
 </div>
+<div class="yui3-skin-sam">
+  <div id="modal"></div>
+</div>
 <!-- </form> -->
 <script src='<%=request.getContextPath()+"/js/select2.min.js"%>'></script>
 <script src='<%=request.getContextPath()+"/js/i18n/es.js"%>'></script>
@@ -336,5 +339,59 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 			});			
 				
 		});
+		
+		
+		var modal ;
+		var img= '<%=request.getContextPath()+"/img/notificuervo.svg" %>';
+		YUI().use(
+		 'aui-modal',
+		 function(Y) {
+		   modal = new Y.Modal(
+		     {
+		       bodyContent: '<h3>Tu solicitud ha sido enviada con éxito</h3>',
+		       centered: true,
+		       destroyOnHide: false,
+		       headerContent: '<img style =" display: block; margin: auto;"src="'+img+'" alt="" height="42" width="42">',
+		       modal: true,
+		       render: '#modal',
+		       resizable: {
+		         handles: 'b, r'
+		       },
+		       toolbars: {
+		         body: [
+		           
+		         ]
+		       },
+		       visible: false,
+		       width: 650
+		     }
+		   ).render();
+
+		   modal.addToolbar(
+		     [
+		       {
+		         label: 'Aceptar',
+		         on: {
+		           click: function() {
+		            // modal.hide();
+		   var pathname = window.location.pathname; // Returns path only (/path/example.html)
+		var url      = window.location.href;     // Returns full URL (https://example.com/path/example.html)
+		var origin   = window.location.origin;   // Returns base URL (https://example.com)
+		            window.location.href = origin + pathname;
+		           }
+		         }
+		       },
+		     
+		     ]
+		   );
+
+		   Y.one('#btn_env').on(
+		     'click',
+		     function() {
+		     
+		     }
+		   );
+		 }
+		);
 	});
 </script>

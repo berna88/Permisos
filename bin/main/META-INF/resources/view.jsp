@@ -1,8 +1,8 @@
 		<%@ include file="/init.jsp" %>
 		<%@ include file="jsp/header/banner.jsp" %>
 		
-		<!-- <link rel="stylesheet" type="text/css" href="/o/Permisos-portlet/css/gijgo.min.css">
-		<link rel="stylesheet" type="text/css" href="/o/Permisos-portlet/css/calendar.css"> -->
+		<!--<link rel="stylesheet" type="text/css" href="/o/Permisos-portlet/css/gijgo.min.css">
+		<link rel="stylesheet" type="text/css" href="/o/Permisos-portlet/css/bootstrap-datepicker.css"> -->
 		
 		<section class="row justify-content-center">
 	 		<article class="col-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">	 			
@@ -43,7 +43,7 @@
 									</label>
 									<div class="input-group mb-3 " style="background: black;">
 										<!-- <input type="text" class="form-control form-control-sm" style="background: url('<%=request.getContextPath()+"/img/calendar-cuervo.svg"%>') no-repeat scroll 5px 4px;background-size: 17px; background-position: 96%;" placeholder="Regresa a laborar" id="fechaRegreso" autocomplete="off"> -->
-										<input id="fechaRegreso" type="text" class="form-control form-control-sm" style="background: url('<%=request.getContextPath()+"/img/calendar-cuervo.svg"%>') no-repeat scroll 5px 4px;background-size: 17px;background-position: 96%; " name="<portlet:namespace />fechaRegreso" placeholder="Regresa a laborar" autocomplete="off" readonly="readonly" />
+										<input id="fechaRegreso" type="text" class="form-control form-control-sm" style="background: url('<%=request.getContextPath()+"/img/calendar-cuervo.svg"%>') no-repeat scroll 5px 4px;background-size: 17px;background-position: 96%; " name="<portlet:namespace />fechaRegreso" placeholder="Regresa a laborar" autocomplete="off" readonly="readonly"/>
 									</div>
 								</div>
 								<div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -94,12 +94,18 @@
 				</div>
 			</article>
 		</section>
+		<div class="yui3-skin-sam">
+		  <div id="modal"></div>
+		</div>
 		<script src="/o/Permisos-portlet/js/select2.min.js"></script>
 		<script src="/o/Permisos-portlet/js/i18n/es.js"></script>
-		<script src="/o/Permisos-portlet/js/jquery-ui.js"></script>
-		<!-- <script src="/o/Permisos-portlet/js/gijgo.min.js"></script>
+		<script src="/o/Permisos-portlet/js/bootstrap-datepicker.js"></script>
+		 
+		<!--<script src="/o/Permisos-portlet/js/jquery-ui.js"></script>
+		<script src="/o/Permisos-portlet/js/gijgo.min.js"></script>
 		<script src="/o/Permisos-portlet/js/core.js"></script>
 		<script src="/o/Permisos-portlet/js/datepicker.js"></script> -->
+		
 		<script>
 		
 			var myPermiso = "";
@@ -114,14 +120,28 @@
 			        
 			        closeBtn.bind("click", function() {
 			        	$( "#fechaInicio" ).datepicker( "hide" );
-			        	$( "#fechaRegreso" ).datepicker( "hide" );
+			        	$( "#fechaRegreso" ).datepicker( "hide" );			    
 			        });
 			        
 			        closeBtn.prependTo(headerPanel);
 			    }, 1 );
 			};
 			
+			 $.fn.datepicker.dates['es'] = {
+					 days: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+					 daysShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+					 daysMin: ['D','L','M','M','J','V','S'],
+					 months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+					 monthsShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+					 today: "Hoy",
+					 clear: "Borrar",
+					 format: "yyyy-mm-dd",
+					 titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+					 weekStart: 0
+			 };
+			
 			function select2Init(){
+				
 				var _ojbUser = '<%=strObjJSON%>';
 				
 				var _UsersJSON = JSON.parse(_ojbUser);
@@ -143,29 +163,59 @@
 					  data: _UsersJSON.results,
 					  placeholder: 'Selecciona una opción',
 					  language: "es"
-				});
+				});		
 				
 				/*$('#fechaInicio').datepicker({
 				    uiLibrary: 'bootstrap4',
 				    locale: 'es-es',
 				    format: 'dd/mm/yyyy'
+				});*/
+								
+				$('#fechaInicio').datepicker({
+				    language: 'es',
+				    autoclose: true,
+				    orientation: 'bottom',
+				}).on('changeDate', function (selected) {
+				    var minDate = new Date(selected.date.valueOf());
+				    $('#fechaRegreso').datepicker('setStartDate', minDate);
+				    var _fechaRegreso, _fechaInicio = "";
+				    if(document.getElementById("fechaRegreso").value != ""){
+				    	_fechaRegreso = new Date(document.getElementById("fechaRegreso").value).getTime();
+				    	_fechaInicio = new Date(document.getElementById("fechaInicio").value).getTime();
+				    	if(_fechaInicio > _fechaRegreso)
+				    		$('#fechaRegreso').datepicker("update", document.getElementById("fechaInicio").value);
+				    }
 				});
 				
-
 				$('#fechaRegreso').datepicker({
-				    uiLibrary: 'bootstrap4',
-				    locale: 'es-es',
-				    format: 'dd/mm/yyyy'
-				});*/
-			}
-			
-			
+					language: 'es',
+					autoclose: true,
+					orientation: 'bottom'
+				});
+			}		
 			 
 			 $(document).ready(function(){
 				 var _usuario = '<%=usuario%>';
 				 
-				 select2Init();					
+				 select2Init();		
 				 
+				 /*$('#fechaInicio').on('click', function(){
+					 var popup = $(this).offset();
+					 var popupTop = popup.top - 170;
+					 $('.datepicker').css({
+						 'top' : popupTop
+					 });
+				 });
+				 
+				 $('#fechaRegreso').on('click', function(){
+					 var popup = $(this).offset();
+					 var popupTop = popup.top - 170;
+					 $('.datepicker').css({
+						 'top' : popupTop
+					 });
+				 });*/
+				
+				/* 				 
 				 $.fn.inputFilter = function(inputFilter) {
 					 return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
 						 if (inputFilter(this.value)) {
@@ -182,6 +232,46 @@
 				};
 				
 				$("#diasSolicitados").inputFilter(function(value) {return /^-?\d*$/.test(value); });
+				
+				$( "#fechaInicio" ).datepicker({
+					changeMonth: true,
+				    changeYear: true,
+				    hideIfNoPrevNext: true,
+				    dateFormat: "yy-mm-dd",
+				    maxDate: '+2y',
+				    minDate: '-2y',
+					beforeShow: changeCloseButton,			
+					onChangeMonthYear: changeCloseButton,
+					onClose: function(){
+						$('#ui-datepicker-div').removeClass('show-calendar');
+					},
+					onSelect: function(date){
+						var selectedDate = new Date(date);
+						var msecsInADay = 86400000;
+						var endDate = new Date(selectedDate.getTime() + msecsInADay);
+						
+						$("#fechaRegreso").datepicker( "option", "minDate", endDate );
+						$("#fechaRegreso").datepicker( "option", "maxDate", '+2y' );
+					}
+				}).focus(function () {
+				    $(".ui-datepicker-next").hide();
+				    $(".ui-datepicker-prev").hide();
+				});
+			
+				$( "#fechaRegreso" ).datepicker({
+					changeMonth: true,
+				    changeYear: true,
+				    hideIfNoPrevNext: true,
+				    dateFormat: "yy-mm-dd",
+				    beforeShow: changeCloseButton,
+					onChangeMonthYear: changeCloseButton,
+					onClose: function(){
+						$('#ui-datepicker-div').removeClass('show-calendar');
+					}
+				}).focus(function () {
+				    $(".ui-datepicker-next").hide();
+				    $(".ui-datepicker-prev").hide();
+				});	
 				
 				$.datepicker.regional['es'] = {
 						closeText: 'Cerrar',
@@ -201,6 +291,8 @@
 						yearSuffix: ''
 				};
 				
+				$.datepicker.setDefaults($.datepicker.regional['es']);
+				
 				$.extend($.datepicker, {
 					
 				    // Reference the orignal function so we can override it and call it later
@@ -218,45 +310,8 @@
 				            beforeShow.apply(target, [target, inst]);
 				        }
 				    }
-				});
-				
-				
-				$( "#fechaInicio" ).datepicker({
-					changeMonth: true,
-				    changeYear: true,
-				    hideIfNoPrevNext: true,
-				    dateFormat: "yy-mm-dd",
-				    maxDate: '+2y',
-				    minDate: '-2y',
-					beforeShow: changeCloseButton,			
-					onChangeMonthYear: changeCloseButton,
-					onSelect: function(date){
-						var selectedDate = new Date(date);
-						var msecsInADay = 86400000;
-						var endDate = new Date(selectedDate.getTime() + msecsInADay);
-						
-						$("#fechaRegreso").datepicker( "option", "minDate", endDate );
-						$("#fechaRegreso").datepicker( "option", "maxDate", '+2y' );
-					}
-				}).focus(function () {
-				    $(".ui-datepicker-next").hide();
-				    $(".ui-datepicker-prev").hide();
-				});
-			
-				$( "#fechaRegreso" ).datepicker({
-					changeMonth: true,
-				    changeYear: true,
-				    hideIfNoPrevNext: true,
-				    //minDate: 0,
-				    dateFormat: "yy-mm-dd",
-				    beforeShow: changeCloseButton,
-					onChangeMonthYear: changeCloseButton
-				}).focus(function () {
-				    $(".ui-datepicker-next").hide();
-				    $(".ui-datepicker-prev").hide();
-				});	
-				
-				$.datepicker.setDefaults($.datepicker.regional['es']);
+				});*/
+				 
 							
 				$("#Send").on('click', function(){
 					var _tipPermiso = myPermiso;
@@ -339,6 +394,8 @@
 					            a.remove();
 					            window.URL.revokeObjectURL(url); 
 					        }
+					        
+					        modal.show();
 					    },
 					    error : function(XMLHttpRequest, textStatus, errorThrown){
 					    	console.log('XMLHttpRequest', XMLHttpRequest);
@@ -348,5 +405,41 @@
 					});			
 						
 				});
+				
+				var modal ;
+				var img= "/o/Permisos-portlet/img/notificuervo.svg";
+				YUI().use('aui-modal', function(Y) {
+				   modal = new Y.Modal({
+					   bodyContent: '<h3>Tu solicitud ha sido enviada con éxito</h3>',
+				       centered: true,
+				       destroyOnHide: false,
+				       headerContent: '<img style =" display: block; margin: auto;"src="'+img+'" alt="" height="42" width="42">',
+				       modal: true,
+				       render: '#modal',
+				       resizable: {
+				         handles: 'b, r'
+				       },
+				       toolbars: {
+				         body: [ ]
+				       },
+				       visible: false,
+				       width: 650
+				   }).render();
+
+				   modal.addToolbar([
+					   {
+				         label: 'Aceptar',
+				         on: {
+				           click: function() {
+				        	   // modal.hide();
+				        	   var pathname = window.location.pathname; // Returns path only (/path/example.html)
+				        	   var url      = window.location.href;     // Returns full URL (https://example.com/path/example.html)
+				        	   var origin   = window.location.origin;   // Returns base URL (https://example.com)
+				        	   window.location.href = origin + pathname;
+				           }
+				         }
+				       },				     
+				     ]);
+				 });
 			});
 		</script>
