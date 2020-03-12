@@ -1,5 +1,4 @@
 		<%@ include file="/init.jsp" %>
-		<%@ include file="jsp/header/banner.jsp" %>
 		
 		<!--<link rel="stylesheet" type="text/css" href="/o/Permisos-portlet/css/gijgo.min.css">
 		<link rel="stylesheet" type="text/css" href="/o/Permisos-portlet/css/bootstrap-datepicker.css"> -->
@@ -66,7 +65,7 @@
 								</div>
 								<div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 select">
 									<label for="exampleFormControlSelect2">
-										Recursos Humanos*
+										Gerente o Director de área*
 									</label>
 									<!-- <input type="text" class="form-control form-control-sm"  id="Gerente_Director" list="informacion2"> -->
 									<select id="Gerente_Director" class="form-control form-control-sm" name="Gerente Director"></select>
@@ -74,7 +73,7 @@
 								</div>
 								<div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 select">
 									<label for="exampleFormControlSelect2">
-										Gerente o Director de área*
+										Recursos Humanos*
 									</label>
 									<!-- <input type="text" class="form-control form-control-sm"  id="Gerente_Director" list="informacion2"> -->
 									<select id="RecursosHumanos" class="form-control form-control-sm" name="Recursos Humanos"></select>
@@ -164,13 +163,7 @@
 					  placeholder: 'Selecciona una opción',
 					  language: "es"
 				});		
-				
-				/*$('#fechaInicio').datepicker({
-				    uiLibrary: 'bootstrap4',
-				    locale: 'es-es',
-				    format: 'dd/mm/yyyy'
-				});*/
-								
+												
 				$('#fechaInicio').datepicker({
 				    language: 'es',
 				    autoclose: true,
@@ -197,121 +190,7 @@
 			 $(document).ready(function(){
 				 var _usuario = '<%=usuario%>';
 				 
-				 select2Init();		
-				 
-				 /*$('#fechaInicio').on('click', function(){
-					 var popup = $(this).offset();
-					 var popupTop = popup.top - 170;
-					 $('.datepicker').css({
-						 'top' : popupTop
-					 });
-				 });
-				 
-				 $('#fechaRegreso').on('click', function(){
-					 var popup = $(this).offset();
-					 var popupTop = popup.top - 170;
-					 $('.datepicker').css({
-						 'top' : popupTop
-					 });
-				 });*/
-				
-				/* 				 
-				 $.fn.inputFilter = function(inputFilter) {
-					 return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
-						 if (inputFilter(this.value)) {
-					        this.oldValue = this.value;
-					        this.oldSelectionStart = this.selectionStart;
-					        this.oldSelectionEnd = this.selectionEnd;
-					      } else if (this.hasOwnProperty("oldValue")) {
-					        this.value = this.oldValue;
-					        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-					      } else {
-					        this.value = "";
-					      }
-					 });
-				};
-				
-				$("#diasSolicitados").inputFilter(function(value) {return /^-?\d*$/.test(value); });
-				
-				$( "#fechaInicio" ).datepicker({
-					changeMonth: true,
-				    changeYear: true,
-				    hideIfNoPrevNext: true,
-				    dateFormat: "yy-mm-dd",
-				    maxDate: '+2y',
-				    minDate: '-2y',
-					beforeShow: changeCloseButton,			
-					onChangeMonthYear: changeCloseButton,
-					onClose: function(){
-						$('#ui-datepicker-div').removeClass('show-calendar');
-					},
-					onSelect: function(date){
-						var selectedDate = new Date(date);
-						var msecsInADay = 86400000;
-						var endDate = new Date(selectedDate.getTime() + msecsInADay);
-						
-						$("#fechaRegreso").datepicker( "option", "minDate", endDate );
-						$("#fechaRegreso").datepicker( "option", "maxDate", '+2y' );
-					}
-				}).focus(function () {
-				    $(".ui-datepicker-next").hide();
-				    $(".ui-datepicker-prev").hide();
-				});
-			
-				$( "#fechaRegreso" ).datepicker({
-					changeMonth: true,
-				    changeYear: true,
-				    hideIfNoPrevNext: true,
-				    dateFormat: "yy-mm-dd",
-				    beforeShow: changeCloseButton,
-					onChangeMonthYear: changeCloseButton,
-					onClose: function(){
-						$('#ui-datepicker-div').removeClass('show-calendar');
-					}
-				}).focus(function () {
-				    $(".ui-datepicker-next").hide();
-				    $(".ui-datepicker-prev").hide();
-				});	
-				
-				$.datepicker.regional['es'] = {
-						closeText: 'Cerrar',
-						prevText: '< Ant',
-						nextText: 'Sig >',
-						currentText: 'Hoy',
-						monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-						monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
-						dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-						dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
-						dayNamesMin: ['D','L','M','M','J','V','S'],
-						weekHeader: 'Sm',
-						dateFormat: 'dd/mm/yy',
-						firstDay: 1,
-						isRTL: false,
-						showMonthAfterYear: false,
-						yearSuffix: ''
-				};
-				
-				$.datepicker.setDefaults($.datepicker.regional['es']);
-				
-				$.extend($.datepicker, {
-					
-				    // Reference the orignal function so we can override it and call it later
-				    _inlineDatepicker2: $.datepicker._inlineDatepicker,
-				
-				    // Override the _inlineDatepicker method
-				    _inlineDatepicker: function (target, inst) {
-				
-				        // Call the original
-				        this._inlineDatepicker2(target, inst);
-				
-				        var beforeShow = $.datepicker._get(inst, 'beforeShow');
-				
-				        if (beforeShow) {
-				            beforeShow.apply(target, [target, inst]);
-				        }
-				    }
-				});*/
-				 
+				 select2Init();						 				 
 							
 				$("#Send").on('click', function(){
 					var _tipPermiso = myPermiso;
@@ -339,18 +218,13 @@
 					var _SolicitudJSON = "{\"Inicio\":\""+_fechaInicio+"\",\"Diasatomar\": \""+_diasSolicitados+"\",\"Gerente\":\""
 						+_Gerente_DirectorId+"\",\"TipoPermiso\":\""+_tipPermiso+"\",\"Jefe\":\""+_JefeInmediatoId+"\",\"Comentarios\":\""+_comentarios+"\",\"Final\":\""
 						+_fechaRegreso+"\", \"Rhvobo\":\""+_RecursosHumanosId+"\"}";
-						
-					//console.log(_SolicitudJSON);	
+							
 					var _objSolicitudJSON = JSON.parse(_SolicitudJSON);
 					
 					var pathname = window.location.pathname; // Returns path only (/path/example.html)
 					var url      = window.location.href;     // Returns full URL (https://example.com/path/example.html)
 					var origin   = window.location.origin;   // Returns base URL (https://example.com)
-					
-					//console.log('pathname ' , pathname , ' url ', url , ' origin ', origin);
-					
-					//window.location.href = origin + pathname;
-					
+										
 					$.ajax({
 						url: '${addRequestPermisosURL}',
 					    type: 'POST',
@@ -373,8 +247,10 @@
 					    success: function(data){
 					    	// Internet Explorer 6-11
 					    	var isIE = /*@cc_on!@*/false || !!document.documentMode;
+					    	// Edge 20+
+			  				var isEdge = !isIE && !!window.StyleMedia;
 					    	
-					        if(isIE){
+					        if(isIE || isEdge){
 					        	// To create a mouse event , first we need to create an event and then initialize it.
 					        	var binaryData = [];
 						    	binaryData.push(data);

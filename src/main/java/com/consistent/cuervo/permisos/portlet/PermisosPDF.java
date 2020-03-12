@@ -165,7 +165,7 @@ public class PermisosPDF {
 					new Cell().setBorder(Border.NO_BORDER).setPadding(0).setMargin(0).add(paragraphNoEmpleado)
 					.setTextAlignment(TextAlignment.LEFT).setVerticalAlignment(VerticalAlignment.MIDDLE));
 			tableHeader.addCell(
-					new Cell().setBorder(Border.NO_BORDER).setPadding(0).setMargin(0).add(paragraphFechaElaboracion)
+					new Cell().setWidth(250).setBorder(Border.NO_BORDER).setPadding(0).setMargin(0).add(paragraphFechaElaboracion)
 					.setTextAlignment(TextAlignment.RIGHT).setVerticalAlignment(VerticalAlignment.MIDDLE));
 			
 			tableHeader.addCell(
@@ -263,7 +263,7 @@ public class PermisosPDF {
 			    }
 		    objCalendar.setTime(dateStart);
 		    intDay = objCalendar.get(Calendar.DATE);
-		    intMonth = objCalendar.get(Calendar.MONTH)+1;
+		    intMonth = objCalendar.get(Calendar.MONTH);
 		    intYear = objCalendar.get(Calendar.YEAR);
 		    Text textCellVacacionesVal = new Text(intDay+" - "+strMonth[intMonth]+" - "+intYear).setFont(fontLIGHT).setFontSize(10);
 		    Paragraph paragraphCellVacacionesVal = new Paragraph().add(textCellVacacionesVal);
@@ -301,7 +301,7 @@ public class PermisosPDF {
 			    }
 		    objCalendar.setTime(dateBack);
 		    intDay = objCalendar.get(Calendar.DATE);
-		    intMonth = objCalendar.get(Calendar.MONTH)+1;
+		    intMonth = objCalendar.get(Calendar.MONTH);
 		    intYear = objCalendar.get(Calendar.YEAR);
 		    
 		    Text textCellRegresaLaborarVal = new Text(intDay+" - "+strMonth[intMonth]+" - "+intYear).setFont(fontLIGHT).setFontSize(10);
@@ -486,7 +486,7 @@ public class PermisosPDF {
 			strLocalidad = (String) objUser.getExpandoBridge().getAttribute("Tienda_localidad");		
 		
 		String fullName = strNombre + " " + strApellidoPaterno + " " + strApellidoMaterno;
-		log.info(fullName);
+		
 		try {
 			FontProgram fontBOLD = FontProgramFactory.createFont(BOLD);
 			FontProgram fontLIGHT = FontProgramFactory.createFont(LIGHT);
@@ -577,7 +577,6 @@ public class PermisosPDF {
 			tableHeader.setFontSize(11);
 			//tableHeader.setFixedPosition(20, bottom, width)
 			document.add(tableHeader);
-			log.info("Se agrega cabecera informacion de usuario");
 			
 			Text textAviso = new Text("PERMISO").setFont(textBold);
 			textAviso.setFontColor(new DeviceRgb(205, 184, 116));
@@ -773,9 +772,8 @@ public class PermisosPDF {
 			document.add(paragraphComentarios);			
 			document.close();
 			
-			log.info("Se envia correo***");
 			SendMail.mail(objUser.getEmailAddress(), "intranet@cuervo.com.mx", "Permiso", tempFile);
-			log.info("se envio correo");
+			
 			return tempFile;
 
 		} catch (IOException e) {

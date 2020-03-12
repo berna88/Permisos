@@ -22,7 +22,6 @@ public class SendMail {
 			mailMessage.setHTMLFormat(true);
 			mailMessage.setBody("Adjunto encontrara su solicitud.");
 			mailMessage.addFileAttachment(file);
-			System.out.println("Se envia el correo");
 			MailServiceUtil.sendEmail(mailMessage);
 			
 		}catch (AddressException e) {

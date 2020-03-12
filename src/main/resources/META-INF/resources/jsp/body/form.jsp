@@ -311,8 +311,10 @@ if(!usuarios.isEmpty()  && usuarios.size() > 0){
 			    success: function(data){		            
 		         	// Internet Explorer 6-11
 			    	var isIE = /*@cc_on!@*/false || !!document.documentMode;
+			    	// Edge 20+
+	  				var isEdge = !isIE && !!window.StyleMedia;
 			    	
-			        if(isIE){
+			        if(isIE || isEdge){
 			        	var binaryData = [];
 				    	binaryData.push(data);
 				    	var url = window.URL.createObjectURL(new Blob(binaryData, {type: "application/zip"}))

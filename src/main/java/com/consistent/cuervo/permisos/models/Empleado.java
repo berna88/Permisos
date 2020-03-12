@@ -39,7 +39,7 @@ public class Empleado {
 			noEmpleado = (String) user.getExpandoBridge().getAttribute("No_Empleado");
 		} catch (Exception e) {
 			// TODO: handle exception
-			log.error("Method: getNoEmpleado");
+			//log.error("Method: getNoEmpleado");
 			noEmpleado = "";
 		}
 		return noEmpleado;
@@ -86,7 +86,7 @@ public class Empleado {
 			puesto = (String) user.getExpandoBridge().getAttribute("Desc_Puesto_Trabajo");
 		} catch (Exception e) {
 			// TODO: handle exception
-			log.error("Method: getPuesto");
+			//log.error("Method: getPuesto");
 			puesto = "";
 		}
 		return puesto;
@@ -99,7 +99,7 @@ public class Empleado {
 			departamento = (String) user.getExpandoBridge().getAttribute("Desc_Depto");
 		} catch (Exception e) {
 			// TODO: handle exception
-			log.error("Method: getDepartamento");
+			//log.error("Method: getDepartamento");
 			departamento = "";
 		}
 		return departamento;
@@ -112,7 +112,7 @@ public class Empleado {
 			centroCostos = (String) user.getExpandoBridge().getAttribute("Clave_Centro_Costos");
 		} catch (Exception e) {
 			// TODO: handle exception
-			log.error("Method: getCentroCostos");
+			//log.error("Method: getCentroCostos");
 			centroCostos = "";
 		}
 		return centroCostos;
@@ -125,7 +125,7 @@ public class Empleado {
 			centrotrabajo = (String) user.getExpandoBridge().getAttribute("Desc_Lugar_de_Trabajo");
 		} catch (Exception e) {
 			// TODO: handle exception
-			log.error("Method: getCentrotrabajo");
+			//log.error("Method: getCentrotrabajo");
 			centrotrabajo = "";
 		}
 		return centrotrabajo;
@@ -149,7 +149,7 @@ public class Empleado {
 				aniversario = year - Integer.parseInt(ano);
 			}
 		} catch (Exception e) {
-			log.error("getAniversario"+e.getMessage());
+			//log.error("getAniversario"+e.getMessage());
 			// TODO: handle exception
 			aniversario = 0;
 		}
@@ -169,7 +169,7 @@ public class Empleado {
 			nombre = (String) user.getExpandoBridge().getAttribute("Nombres");
 		} catch (Exception e) {
 			// TODO: handle exception
-			log.error("Method: getNombre");
+			//log.error("Method: getNombre");
 			nombre = "";
 		}
 		return nombre;
@@ -184,7 +184,7 @@ public class Empleado {
 			;
 		} catch (Exception e) {
 			// TODO: handle exception
-			log.error("Method: getApellidos");
+			//log.error("Method: getApellidos");
 			apellidos = "";
 		}
 		return apellidos;

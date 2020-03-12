@@ -61,18 +61,18 @@ public class PermisosPortlet extends MVCPortlet {
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws IOException, PortletException {
 		// TODO Auto-generated method stub
-		log.info("Render");
+		
 		try {
 			
 			User user = PortalUtil.getUser(renderRequest);
 			empleado = new Empleado(user);
 			
 			if(empleado.getUser()!=null) {
-				log.info("Logeado");
+				
 				renderRequest.setAttribute("Empleado", empleado);
 				renderRequest.setAttribute("users", Portal.getUsers());
 			}else {
-				log.info("No logeado");
+				
 				Empleado empleado = new Empleado();
 				List<User> users = new ArrayList<>();
 				renderRequest.setAttribute("Empleado", empleado);
