@@ -265,7 +265,7 @@ public class PermisosPDF {
 		    intDay = objCalendar.get(Calendar.DATE);
 		    intMonth = objCalendar.get(Calendar.MONTH);
 		    intYear = objCalendar.get(Calendar.YEAR);
-		    Text textCellVacacionesVal = new Text(intDay+" - "+strMonth[intMonth]+" - "+intYear).setFont(fontLIGHT).setFontSize(10);
+		    Text textCellVacacionesVal = new Text(intDay+1+" - "+strMonth[intMonth]+" - "+intYear).setFont(fontLIGHT).setFontSize(10);
 		    Paragraph paragraphCellVacacionesVal = new Paragraph().add(textCellVacacionesVal);
 		    
 		    Text textCellSaldo = new Text("").setFont(fontSEMIBOLD).setFontSize(10);
@@ -304,7 +304,7 @@ public class PermisosPDF {
 		    intMonth = objCalendar.get(Calendar.MONTH);
 		    intYear = objCalendar.get(Calendar.YEAR);
 		    
-		    Text textCellRegresaLaborarVal = new Text(intDay+" - "+strMonth[intMonth]+" - "+intYear).setFont(fontLIGHT).setFontSize(10);
+		    Text textCellRegresaLaborarVal = new Text(intDay+1+" - "+strMonth[intMonth]+" - "+intYear).setFont(fontLIGHT).setFontSize(10);
 		    Paragraph paragraphCellRegresaLaborarVal = new Paragraph().add(textCellRegresaLaborarVal);
 		    
 		    Text textCellDiasDisponibles = new Text("").setFont(fontSEMIBOLD).setFontSize(10);
@@ -431,8 +431,9 @@ public class PermisosPDF {
 			document.add(paragraphImportante2);
 			
 			Text textComentarios = new Text(strComentarios).setFont(fontLIGHT).setFontSize(10);
-			Paragraph paragraphComentarios = new Paragraph(textComentarios).setTextAlignment(TextAlignment.LEFT).setVerticalAlignment(VerticalAlignment.TOP);
-			paragraphComentarios.setFixedPosition(47, 320, 500);
+			Paragraph paragraphComentarios = new Paragraph(textComentarios).setTextAlignment(TextAlignment.LEFT);//.setVerticalAlignment(VerticalAlignment.TOP);
+			//paragraphComentarios.setFixedPosition(47, 320, 500);
+			paragraphComentarios.setMarginTop(10);
 			document.add(paragraphComentarios);	
 			document.close();
 			

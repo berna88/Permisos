@@ -218,8 +218,10 @@
 					var _SolicitudJSON = "{\"Inicio\":\""+_fechaInicio+"\",\"Diasatomar\": \""+_diasSolicitados+"\",\"Gerente\":\""
 						+_Gerente_DirectorId+"\",\"TipoPermiso\":\""+_tipPermiso+"\",\"Jefe\":\""+_JefeInmediatoId+"\",\"Comentarios\":\""+_comentarios+"\",\"Final\":\""
 						+_fechaRegreso+"\", \"Rhvobo\":\""+_RecursosHumanosId+"\"}";
-							
-					var _objSolicitudJSON = JSON.parse(_SolicitudJSON);
+					
+					//console.log(_SolicitudJSON);
+					//var _objSolicitudJSON = JSON.parse(_SolicitudJSON);
+					
 					
 					var pathname = window.location.pathname; // Returns path only (/path/example.html)
 					var url      = window.location.href;     // Returns full URL (https://example.com/path/example.html)
